@@ -2,6 +2,8 @@
 
 用可交互的积木讲清楚最优批处理：先亲手划分连续批次，再观察 O(n²) 动态规划如何枚举决策，最后看单调凸壳将计算优化到摊还 O(n)。项目可在浏览器本地运行，无需后端。
 
+[在线体验](https://luo00oul.github.io/lego-batchlab/) · [GitHub 仓库](https://github.com/luo00oul/lego-batchlab)
+
 ![网站首页预览](docs/preview.png)
 
 ## 快速开始
@@ -77,7 +79,7 @@ Windows PowerShell 可将可执行文件命名为 `batchlab.exe`，再运行 `./
 
 ## GitHub Pages
 
-项目使用相对资源路径，并提供 `.github/workflows/pages.yml`。推送到 `main` 或 `master` 后，在仓库 **Settings → Pages → Build and deployment** 中选择 **GitHub Actions**。工作流会运行依赖安装、测试、构建和部署。部署地址通常是 `https://<用户名>.github.io/<仓库名>/`。
+项目使用相对资源路径，并提供 `.github/workflows/pages.yml`。推送到 `main` 或 `master` 后，在仓库 **Settings → Pages → Build and deployment** 中选择 **GitHub Actions**。工作流会运行依赖安装、测试、构建和部署。本项目的部署地址是 [https://luo00oul.github.io/lego-batchlab/](https://luo00oul.github.io/lego-batchlab/)。
 
 ## 项目结构
 
