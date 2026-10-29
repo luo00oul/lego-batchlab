@@ -1,0 +1,17 @@
+.wallpaper-scene{position:fixed;inset:0;z-index:0;pointer-events:none;background-position:center;background-size:cover;background-repeat:no-repeat;background-color:#c5a8d9}
+.wallpaper-scene::after{content:'';position:absolute;inset:0;background:linear-gradient(rgba(255,253,247,.16),rgba(255,253,247,.25)),linear-gradient(#fff7 1px,transparent 1px),linear-gradient(90deg,#fff7 1px,transparent 1px);background-size:auto,28px 28px,28px 28px}
+.wallpaper-scene+main{position:relative;z-index:1}
+.top{background:rgba(255,253,247,.91);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.hero{padding:22px 0 18px}.hero-copy{padding:21px 23px 24px;background:rgba(255,253,247,.92);border:2px solid #303136;border-radius:7px;box-shadow:5px 5px 0 #3d3d41}
+footer{background:rgba(255,253,247,.86);padding-left:12px;padding-right:12px;backdrop-filter:blur(8px)}
+.wallpaper-controls{display:flex;align-items:center;gap:8px;flex:none;position:relative}
+.wallpaper-file{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none;overflow:hidden}
+.wallpaper-upload,.wallpaper-reset{display:inline-flex;align-items:center;gap:5px;white-space:nowrap;border:2px solid #303136;border-radius:4px;padding:7px 10px;font-size:11px;font-weight:800;line-height:1.2;box-shadow:2px 2px 0 #303136;transition:transform .15s,box-shadow .15s}
+.wallpaper-upload{background:#f8cf4c;color:#29292e}.wallpaper-reset{background:#fffdf6;color:#5b5353}
+.wallpaper-upload:hover,.wallpaper-reset:hover{transform:translateY(-2px);box-shadow:3px 4px 0 #303136}
+.wallpaper-upload:focus-visible,.wallpaper-reset:focus-visible{outline:3px solid #2b78b7;outline-offset:3px}
+.wallpaper-status{font-size:10px;color:#55535a;white-space:nowrap}
+.wallpaper-message{position:absolute;right:0;top:calc(100% + 11px);z-index:9;width:max-content;max-width:min(320px,90vw);padding:9px 11px;background:#fff8e6;border:2px solid #a83c32;border-radius:4px;color:#8f2d25;font-size:11px;line-height:1.5;box-shadow:3px 3px 0 #303136}
+@media(max-width:1050px){.wallpaper-status{display:none}}
+@media(max-width:700px){.hero{padding-top:16px}.hero-copy{padding:16px 16px 18px}.wallpaper-controls{margin-left:auto}.wallpaper-upload,.wallpaper-reset{padding:6px 7px;font-size:10px}}
+@media(max-width:430px){.wallpaper-reset{font-size:0;gap:0}.wallpaper-reset svg{width:15px;height:15px}}

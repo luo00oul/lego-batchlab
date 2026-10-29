@@ -4,6 +4,7 @@ import { Activity, ArrowRight, Boxes, ChevronLeft, ChevronRight, CircleHelp, Clo
 import { example, optimized, quadratic, scheduleCost, seededInput, validate, type HullStep, type Input, type Result, type Step } from './algorithms';
 import './experience.css';
 import { Guide, DpFormulaPanel, HullFormulaPanel } from './Teaching';
+import { useWallpaper } from './useWallpaper';
 
 type Tab = 'factory' | 'dp' | 'hull' | 'race' | 'guide';
 const tabs: [Tab, string][] = [['factory','积木分批'],['dp','转移拼装'],['hull','凸壳拼线'],['race','算法竞速'],['guide','算法原理']];
@@ -12,6 +13,8 @@ const batchText = (groups: number[][]) => groups.map(g => `[${g[0]}–${g.at(-1)
 const traceLimit = 60;
 
 export default function App() {
+  const wallpaper = useWallpaper();
+  const wallpaperInputRef = useRef<HTMLInputElement | null>(null);
   const [data, setData] = useState<Input>(example);
   const [cuts, setCuts] = useState<number[]>([2,3]);
   const [tab, setTab] = useState<Tab>('factory');
@@ -111,8 +114,8 @@ export default function App() {
   const dpStep = idx > 0 ? currentSlow?.steps[idx - 1] : undefined;
   const hullStep = idx > 0 ? currentFast?.hullSteps[idx - 1] : undefined;
 
-  return <main>
-    <header className="top"><nav>{tabs.map(([key,label]) => <button key={key} className={tab===key?'active':''} onClick={() => { setTab(key); setIdx(0); setPlaying(false); }}>{label}</button>)}</nav><div className="live"><i/> 今天也要加油呀</div></header>
+  return <><div className="wallpaper-scene" aria-hidden="true" style={{backgroundImage:`url("${wallpaper.url}")`}}/><main>
+    <header className="top"><nav>{tabs.map(([key,label]) => <button key={key} className={tab===key?'active':''} onClick={() => { setTab(key); setIdx(0); setPlaying(false); }}>{label}</button>)}</nav><div className="wallpaper-controls"><input ref={wallpaperInputRef} className="wallpaper-file" type="file" accept="image/jpeg,image/png,image/webp,image/avif" aria-label="选择静态壁纸" onChange={e=>{const file=e.target.files?.[0];if(file)wallpaper.choose(file);e.target.value='';}}/><button className="wallpaper-upload" onClick={()=>wallpaperInputRef.current?.click()}><Upload size={14}/> 更换壁纸</button>{wallpaper.name&&<button className="wallpaper-reset" onClick={wallpaper.restoreDefault}><RotateCcw size={13}/> 恢复默认</button>}<span className="wallpaper-status" title={wallpaper.name||'默认壁纸'}>{wallpaper.name?'自定义壁纸':'默认壁纸'}</span>{wallpaper.message&&<span className="wallpaper-message" role="alert">{wallpaper.message}</span>}</div></header>
     <section className="hero"><div className="hero-copy"><h1>把任务拼成<br/><em>最优批次。</em></h1><p>每块积木都是一个作业。亲手移动分批边界，看完成时间、总费用与最优解怎样改变。</p><button className="primary" onClick={() => document.getElementById('workspace')?.scrollIntoView({behavior:'smooth'})}>开始拼批次 <ArrowRight size={17}/></button><div className="hero-meta"><span><b>01</b> 动手分批</span><span><b>02</b> 逐步推导</span><span><b>03</b> 凸壳加速</span></div></div><HeroArt jobs={data.jobs} S={data.S}/></section>
     <div className="stats"><div><span>当前作业</span><b>{data.jobs.length}<small> JOBS</small></b></div><div><span>启动时间</span><b>{data.S}<small> UNIT</small></b></div><div><span>最优费用</span><b className="lime">{currentFast?fmt(currentFast.cost):'—'}<small> COST</small></b></div><div><span>优化复杂度</span><b>O(n)<small> AMORTIZED</small></b></div></div>
     <section id="workspace" className="workspace"><aside className="side"><div className="panel-head"><div><span className="eyebrow">WORKBENCH / 01</span><h2>任务材料盒</h2></div><Factory/></div><label className="input-label">批次启动时间 S<input aria-label="批次启动时间 S" type="number" min="0" value={data.S} onChange={e => edit({...data,S:Number(e.target.value)})}/></label><div className="jobs-title"><span>作业序列</span><button onClick={() => edit({...data,jobs:[...data.jobs,{t:1,f:1}]})}><Plus size={14}/> 添加作业</button></div><div className="job-list">{shownJobs.map((job,i) => <div className="job-row" key={i}><span className="job-no">{String(i+1).padStart(2,'0')}</span><label>t<input aria-label={`任务 ${i+1} 时间`} type="number" min="0" value={job.t} onChange={e => edit({...data,jobs:data.jobs.map((item,j) => j===i?{...item,t:Number(e.target.value)}:item)})}/></label><label>f<input aria-label={`任务 ${i+1} 费用系数`} type="number" min="0" value={job.f} onChange={e => edit({...data,jobs:data.jobs.map((item,j) => j===i?{...item,f:Number(e.target.value)}:item)})}/></label><button className="icon-btn" aria-label={`删除任务 ${i+1}`} disabled={data.jobs.length===1} onClick={() => edit({...data,jobs:data.jobs.filter((_,j)=>j!==i)},cuts.filter(c=>c!==i+1).map(c=>c>i+1?c-1:c))}><Trash2 size={14}/></button></div>)}</div>{data.jobs.length>36&&<p className="side-note">当前显示前 36 项，共 {data.jobs.length} 项。可导入文件管理完整数据。</p>}
@@ -125,7 +128,7 @@ export default function App() {
       {tab==='race'&&<RaceView slow={currentSlow} fast={currentFast} busy={busy} calculate={calculate}/>}
       {tab==='guide'&&<Guide/>}
     </div></section><footer><span>LEGO BatchLab <i>·</i> 积木算法课堂</span><span>固定顺序 · 连续分批 · 精确求解</span></footer>
-  </main>;
+  </main></>;
 }
 
 function HeroArt({jobs,S}:{jobs:Input['jobs'];S:number}) { return <div className="hero-brick-board"><div className="board-top"><span>BRICK ASSEMBLY / {String(jobs.length).padStart(2,'0')} JOBS</span><b>S = {S}</b></div><div className="board-track">{jobs.slice(0,5).map((job,i)=><div className={`hero-brick lego-${i%4}`} key={i} style={{height:`${68+Math.min(30,Math.log2(job.f+1)*9)}px`}}><div className="stud-row"><i/><i/></div><b>J{i+1}</b><small>t {job.t} · f {job.f}</small></div>)}</div><div className="board-bottom"><span>固定顺序 → 连续分批</span><strong>拼出最优解</strong></div></div> }
